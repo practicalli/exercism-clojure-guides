@@ -1,6 +1,8 @@
 (ns hamming)
 
-
+(defn distance [strand1 strand2] ; <- arglist goes here
+  ;; your code goes here
+  )
 
 ;; First thought is to use an anonymous function with filter
 
@@ -36,51 +38,51 @@
 ;; using map we can iterate over multiple functions
 ;; starting with just a simple compare condition
 
-#_(map (fn [a b]
-         (if (= a b)
-           0
-           1))
-       "GGACTGA" "GGACTGA")
+(map (fn [a b]
+       (if (= a b)
+         0
+         1))
+     "GGACTGA" "GGACTGA")
 
 ;; with different strands
 
-#_(map (fn [a b]
-         (if (= a b)
-           0
-           1))
-       "GCACTGA" "GGACTGA")
+(map (fn [a b]
+       (if (= a b)
+         0
+         1))
+     "GCACTGA" "GGACTGA")
 
 ;; now we can just add up the numbers to get the hammer value
 
-#_(apply +
-         (map (fn [a b]
-                (if (= a b)
-                  0
-                  1))
-              "GCACTGA" "GGACTGA"))
+(apply +
+       (map (fn [a b]
+              (if (= a b)
+                0
+                1))
+            "GCACTGA" "GGACTGA"))
 
 
-#_(defn distance [strand1 strand2]
-    ;; your code goes here
-    (if (= (count strand1) (count strand2))
-      (apply +
-             (map (fn [a b]
-                    (if (= a b)
-                      0
-                      1))
-                  strand1 strand2))
-      nil))
+(defn distance [strand1 strand2]
+  ;; your code goes here
+  (if (= (count strand1) (count strand2))
+    (apply +
+           (map (fn [a b]
+                  (if (= a b)
+                    0
+                    1))
+                strand1 strand2))
+    nil))
 
 
 ;; refactor using the function definition syntax short form
 
-#_(defn distance [strand1 strand2]
-    ;; your code goes here
-    (if (= (count strand1) (count strand2))
-      (apply +
-             (map #(if (= % %2) 0 1)
-                  strand1 strand2))
-      nil))
+(defn distance [strand1 strand2]
+  ;; your code goes here
+  (if (= (count strand1) (count strand2))
+    (apply +
+           (map #(if (= %1 %2) 0 1)
+                strand1 strand2))
+    nil))
 
 ;; refactor to a when rather than if,
 ;; as only one branch required.
@@ -126,9 +128,15 @@
 
 ;; flattening a nested structure
 (mapcat identity [[[0 1] [1 2]] [[11 12]]])
+;; => ([0 1] [1 2] [11 12])
+
+(identity [])
 
 ;; replacement for `or` and `and`
 ;; they are both macros, so cannot be used as an argument function
+
+(and true true)
+(apply and '(true false true true))
 
 ;; and
 
