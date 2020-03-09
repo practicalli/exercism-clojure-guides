@@ -5,6 +5,23 @@
 ;; a cond statement is relatively simple
 ;; There are significant context differences preventing a terser solution
 
+;; starting point
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+#_(defn verse
+    "Returns the nth verse of the song."
+    [num]
+    ;; your code here
+    )
+
+#_(defn sing
+    "Given a start and an optional end, returns all verses in this interval. If
+  end is not given, the whole song from start is sung."
+    ([start])
+    ([start end]))
+
+
+
 #_(defn verse
     "Returns the nth verse of the song."
     [num]
@@ -28,11 +45,12 @@
 
 ;; generating a sequence of numbers
 
-#_(range 10)
+#_(range
+    10)
 #_(range 2 11)
 #_(range 100 0)
 #_(range 100 0 -1)
-#_(range 100 -1 -1)
+#_(range 99 -1 -1)
 
 #_(defn sing
     "Given a start and an optional end, returns all verses in this interval. If
@@ -65,7 +83,7 @@
     (str num " bottles of beer on the wall, " num " bottles of beer.\n"
          "Take one down and pass it around, " (dec num) " bottles of beer on the wall.\n")))
 
-#_(map verse (range 3 -1 -1))
+(map verse (range 3 -1 -1))
 ;; => ("3 bottles of beer on the wall, 3 bottles of beer.\nTake one down and pass it around, 2 bottles of beer on the wall.\n" "2 bottles of beer on the wall, 2 bottles of beer.\nTake it down and pass it around, 1 more bottle of beer on the wall.\n" "1 bottle of beer on the wall, 1 bottle of beer.\nTake it down and pass it around, no more bottles of beer on the wall.\n" "No more bottles of beer on the wall, no more bottles of beer.\nGo to the store and buy some more, 99 bottles of beer on the wall.\n")
 
 #_(sing 8 6)
@@ -78,35 +96,35 @@
 ;; apply str will fix this
 
 
-#_(defn sing
-    "Given a start and an optional end, returns all verses in this interval. If
+(defn sing
+  "Given a start and an optional end, returns all verses in this interval. If
   end is not given, the whole song from start is sung."
-    ([start]
-     (map verse (range start -1 -1)))
-    ([start end]
-     (apply str (map verse (range start (dec end) -1)))))
+  ([start]
+   (map verse (range start -1 -1)))
+  ([start end]
+   (apply str (map verse (range start (dec end) -1)))))
 
 
 ;; to minimise code, change the single argument branch to call the two argument branch
 
-#_(defn sing
-    "Given a start and an optional end, returns all verses in this interval. If
+(defn sing
+  "Given a start and an optional end, returns all verses in this interval. If
   end is not given, the whole song from start is sung."
-    ([start]
-     (sing start -1))
-    ([start end]
-     (apply str (map verse (range start (dec end) -1)))))
+  ([start]
+   (sing start -1))
+  ([start end]
+   (apply str (map verse (range start (dec end) -1)))))
 
 
 ;; There is an extra newline character between each verse
 
-#_(defn sing
-    "Given a start and an optional end, returns all verses in this interval. If
+(defn sing
+  "Given a start and an optional end, returns all verses in this interval. If
   end is not given, the whole song from start is sung."
-    ([start]
-     (sing start -1))
-    ([start end]
-     (interpose "\n" (map verse (range start (dec end) -1)))))
+  ([start]
+   (sing start -1))
+  ([start end]
+   (interpose "\n" (map verse (range start (dec end) -1)))))
 
 ;; the result still needs to be a string, so we use clojure.string/join
 
@@ -117,3 +135,5 @@
    (sing start 0))
   ([start end]
    (clojure.string/join "\n" (map verse (range start (dec end) -1)) )))
+
+;; (clojure.string/join "," '("a" "b" "c"))
