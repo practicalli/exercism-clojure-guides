@@ -1,24 +1,17 @@
 (ns rna-transcription
   (:require clojure.string))
 
-(def dictionary-dna-rna
-  "Convert DNA to RNA"
-  {"G" "C"
-   "C" "G"
-   "T" "A"
-   "A" "U"}
-  )
 
+(def dna-nucleotide->rna-nucleotide
+  "DNA to RNA transcription mappings"
+  {\G \C \C \G \T \A \A \U})
 
-(defn convert-nucleotide
-  "Convert a specific nucleotide from a DNA strand,
-  into a nucleotide for an RNA strand"
-  [dictionary nucleotide]
-  (get dictionary (str nucleotide)))
-
-
-(defn to-rna [dna] ;; <- arglist goes here
-  (if (clojure.string/includes? dna "X")
-    (throw (AssertionError.))
-    (apply str
-           (map #(convert-nucleotide dictionary-dna-rna %) dna))))
+(defn to-rna
+  "Transcribe each nucleotide from a DNA strand into its RNA complement
+  Arguments: string representing DNA strand
+  Return: string representing RNA strand"
+  [dna]
+  (clojure.string/join
+    (map #(or (dna-nucleotide->rna-nucleotide %)
+              (throw (AssertionError. "Unknown nucleotide")))
+         dna )))
