@@ -152,6 +152,8 @@
 ;; Its beyond the scope of the Exercism challenge, however, its recommended to use pure functions where possible.
 ;; A pure function only uses data from its arguments.
 ;; Adding a dictionary as an argument to the `to-rna` function would be simple-ident?
+;; requires refactoring the unit tests
+;; Add dna->rna to its own namespace and create parallel tests which use the 2 arity function
 
 (defn to-rna
   [dictionary dna]
