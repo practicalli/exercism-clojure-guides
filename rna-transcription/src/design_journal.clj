@@ -194,3 +194,31 @@
 ;; using the map to generate a placeholder value if passed an incorrect nucleotide.
 
 (convert-nucleotide dictionary-dna-rna "B")
+
+
+
+;; Using Contains to validate the dna sequence
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Check the dna sequence contains all valid characters
+;; If so, then replace characters with their rna equivalent
+
+;; Good approach if replacement of characters use considerable compute resource
+;; compared to validating the dna sequence.
+;; Otherwise the dna sequence is traversed twice, which may not be that efficient.
+
+;; Test performance of this approach verses the recommended solution
+;; especially on large dna sequences. https://github.com/hugoduncan/criterium
+
+(def dna->rna {\G \C
+               \C \G
+               \T \A
+               \A \U})
+
+(defn valid-dna? [n]
+  (contains? dna->rna n))
+
+(defn to-rna [dna]
+  (assert (every? valid-dna? dna))
+  (clojure.string/join (replace dna->rna dna)))
+
+(to-rna "GATTAGA")
