@@ -227,6 +227,9 @@
 ;; Rich comment block with redefined vars ignored
 #_{:clj-kondo/ignore [:redefined-var]}
 (comment
+  ;; The regular expressions cheatsheet from Mozilla Developer Network
+  ;; was very helpful in understanding regular expressions
+  ;; https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet
 
   ;; Using re-matchers, if the string matches the pattern,
   ;; then the string is returned,
@@ -262,7 +265,7 @@
   (re-matches #"\?" "?")
   ;; => "?"
   (re-matches #"\?" "Ready?")
-;; => nil
+  ;; => nil
 
   ;; Match a single ? character preceded by a single character
   (re-matches #".\?" "?")
@@ -278,7 +281,7 @@
 
   ;; Match any number of characters before the ? and the ? is at the end of the string
   (re-matches #".*\?$" "Okay if like my  spacebar  quite a bit?")
-;; => "Okay if like my  spacebar  quite a bit?"
+  ;; => "Okay if like my  spacebar  quite a bit?"
 
   ;; re-matches does not require the $ as there is an implicit boundary
   (re-matches #".*\?" "Okay if like my ? spacebar  quite a bit")
@@ -287,7 +290,7 @@
   (re-matches #".*\?\s" "Okay if like my  spacebar  quite a bit? ")
   ;; => "Okay if like my  spacebar  quite a bit? "
   (re-matches #".*\?\s" "Okay if like my  spacebar  quite a bit?\n")
-;; => "Okay if like my  spacebar  quite a bit?\n"
+  ;; => "Okay if like my  spacebar  quite a bit?\n"
   (re-matches #".*\?\s" "Okay if like my  spacebar  quite a bit?  ")
   ;; => nil
 
@@ -295,7 +298,7 @@
   (re-matches #".*\?\s*" "Okay if like my  spacebar  quite a bit?   ")
   ;; => "Okay if like my  spacebar  quite a bit?   "
   (re-matches #".*\?\s*" "Okay if like my  spacebar  quite a bit? \n ")
-;; => "Okay if like my  spacebar  quite a bit? \n "
+  ;; => "Okay if like my  spacebar  quite a bit? \n "
 
   ;; \s matches a single whitespace character
   ;; \s* matches multiple whitespace characters
