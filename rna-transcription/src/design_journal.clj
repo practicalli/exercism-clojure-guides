@@ -1,3 +1,6 @@
+(ns design-journal)
+
+
 ;; Initial thought are to create a hash-map as a simple dictionary lookup.
 ;; Given a DNA nucleotide, e.g a character from the DNA string, find the key that is the same as the character and return the keys value.
 
@@ -167,10 +170,6 @@
 ;; The function would now be called as follows
 
 (to-rna dictionary-dna-rna "GTGAC")
-
-
-
-
 
 
 

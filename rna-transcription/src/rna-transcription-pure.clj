@@ -11,6 +11,7 @@
               (throw (AssertionError. "Unknown nucleotide")))
          dna )))
 
+(map)
 
 (comment
 
@@ -20,3 +21,14 @@
 
   (dna->rna dna-nucleotide->rna-nucleotide "hello")
   )
+
+(def dna-complement {\G \C, \C \G, \T \A, \A \U})
+
+
+(defn to-rna [dna]
+  {:pre [(every? dna-complement dna)]}
+  (->> dna
+       (map dna-complement)
+       (apply str)))
+
+(to-rna "X")

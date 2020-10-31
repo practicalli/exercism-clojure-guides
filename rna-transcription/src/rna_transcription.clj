@@ -19,6 +19,15 @@
               (throw (AssertionError. "Unknown nucleotide")))
          dna )))
 
+
+;; A pre-condition will throw an assertion error if its expression fails
+
+#_(defn to-rna [dna]
+    {:pre [(every? dna-complement dna)]}
+    (->> dna
+         (map dna-complement)
+         (apply str)))
+
 (comment
   (to-rna "GATTAGA")
   ;; => "CUAAUCU"
