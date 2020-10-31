@@ -1,5 +1,5 @@
-(ns design-journal)
-
+(ns design-journal
+  (:require [clojure.string]))
 
 
 ;; Rich comment block with redefined vars ignored
@@ -46,6 +46,9 @@
 
   (= "WATCH OUT!"
      (clojure.string/upper-case "WATCH OUT!"))
+
+  (= "watch out!"
+     (clojure.string/upper-case "watch out!"))
 
   ;; There is a flaw in this approach thought
 
@@ -167,14 +170,15 @@
       (seq? (re-seq #"\t" "Tom-ay-to, tom-aaaah-to.")))
 
 
-
-
   (re-matches #"\s*" "\t\t\t\t\t\t\t\t\t\t")
+
+  (re-matches #"\s*" "hello")
 
 
   ;; Whatever else
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; Search the tests for the string "Whatever."
+
 
 
 
@@ -205,7 +209,6 @@
         question? "Sure."
 
         yelling? "Whoa, chill out!"
-
 
         saying-nothing? "Fine. Be that way!"
 
@@ -239,6 +242,7 @@
   (re-matches #"[^a-z]*[A-Z]+[^a-z]*" "ABC 1 2 3")
 
 
+  ;; is this a question
   ;; \? matches the ? character
   ;; . matches any single character except line terminators (new line, carriage return)
   ;; .* matches any number of single characters one or more times
@@ -246,23 +250,61 @@
   ;; \s* matches multiple whitespace characters
   ;; $ is a boundary assertion so the pattern only matches the ? at the end of a string and not in the middle
 
+
+  ;; Check if a question mark character is in the string
+  (re-find #".*\?" "Okay if like my ? spacebar  quite a bit")
+
+  ;; $ ensures the ? only matches if at the end of the string
+  (re-find #".*\?$" "Okay if like my ? spacebar  quite a bit")
+
+
+  ;; Match a single ? character with no other characters
   (re-matches #"\?" "?")
+  ;; => "?"
+  (re-matches #"\?" "Ready?")
+;; => nil
+
+  ;; Match a single ? character preceded by a single character
+  (re-matches #".\?" "?")
+  ;; => nil
   (re-matches #".\?" "R?")
+  ;; => "R?"
+
+  ;; Match any number of characters before the ?, but not after
   (re-matches #".*\?" "Ready?")
+  ;; => "Ready?"
+  (re-matches #".*\?" "?Ready")
+  ;; => nil
+
+  ;; Match any number of characters before the ? and the ? is at the end of the string
   (re-matches #".*\?$" "Okay if like my  spacebar  quite a bit?")
-  (re-matches #".*\?\s*$" "Okay if like my  spacebar  quite a bit?   ")
+;; => "Okay if like my  spacebar  quite a bit?"
 
+  ;; re-matches does not require the $ as there is an implicit boundary
+  (re-matches #".*\?" "Okay if like my ? spacebar  quite a bit")
 
+  ;; Match if there is a single space or space type character after the ?
+  (re-matches #".*\?\s" "Okay if like my  spacebar  quite a bit? ")
+  ;; => "Okay if like my  spacebar  quite a bit? "
+  (re-matches #".*\?\s" "Okay if like my  spacebar  quite a bit?\n")
+;; => "Okay if like my  spacebar  quite a bit?\n"
+  (re-matches #".*\?\s" "Okay if like my  spacebar  quite a bit?  ")
+  ;; => nil
+
+  ;; Match if there are multiple space type characters after the ?
+  (re-matches #".*\?\s*" "Okay if like my  spacebar  quite a bit?   ")
+  ;; => "Okay if like my  spacebar  quite a bit?   "
+  (re-matches #".*\?\s*" "Okay if like my  spacebar  quite a bit? \n ")
+;; => "Okay if like my  spacebar  quite a bit? \n "
 
   ;; \s matches a single whitespace character
   ;; \s* matches multiple whitespace characters
 
   (re-matches #"\s*" "")
   (re-matches #"\s*" "  ")
-
+  (re-matches #"\s*" "\t  ")
 
   ;; The results of the `re-matches` can be put into a cond
-
 
   (defn response-for
     [phrase]

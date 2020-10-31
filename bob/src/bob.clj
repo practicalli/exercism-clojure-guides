@@ -17,7 +17,7 @@
 (defn response-for
   [phrase]
   (let [;; A ? at the end of the phrase, not counting whitespace
-        question (re-matches #".*\?\s*$" phrase)
+        question (re-matches #".*\?\s*" phrase)
 
         ;; No lower case characters, at least one upper case character
         yelling (re-matches #"[^a-z]*[A-Z]+[^a-z]*" phrase)
