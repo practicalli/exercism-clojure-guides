@@ -1,0 +1,5 @@
+{
+ ;; quick hack for cider test runner :)
+ :paths ["src" "test"]
+
+ }
