@@ -179,3 +179,44 @@
 
 (defn nucleotide-counts [strand]
   (merge {\A 0 \C 0 \G 0 \T 0} (frequencies strand)))
+
+
+
+;; Rich comment block with redefined vars ignored
+#_{:clj-kondo/ignore [:redefined-var]}
+(comment
+
+  (def valid-bases {\A 0, \C 0, \G 0, \T 0})
+
+  (defn nucleotide-counts [strand]
+    {:post [(= #{\A \T \C \G} (set (keys %)))]}
+    (merge valid-bases (frequencies strand)))
+
+  (defn count-of-nucleotide-in-strand [nucleotide strand]
+    {:pre [(contains? valid-bases nucleotide)]}
+    ((nucleotide-counts strand) nucleotide))
+
+  ) ;; End of rich comment block
+
+
+(def invalid-number "0000000000")
+
+
+
+
+;; Rich comment block with redefined vars ignored
+#_{:clj-kondo/ignore [:redefined-var]}
+(comment
+
+  ;; phone numbers code
+  (defn number [num]
+    (let [valid-number (apply str (re-seq #"\d" num))]
+      (case (count valid-number)
+        10 valid-number
+        11 (if (clojure.string/starts-with? valid-number "1") (subs valid-number 1) invalid-number)
+        invalid-number)))
+
+  (number "1234567890")
+
+
+  ) ;; End of rich comment block
