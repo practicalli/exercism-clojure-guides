@@ -2,6 +2,20 @@
   (:require [clojure.string]))
 
 
+;; General design approach
+;; define the set of rules that process the text as let bindings.  So you could have `question?`, `yelling?`, etc as the names bound to the expression that defines the text parsing rule.
+
+;; Each name would have a value of true or false.
+
+;; Then the `cond` section is simply one of those names, or a combination of names using `and` or `or`,  If a name in the `cond` is true, then it returns its associated phrase.
+
+;; Also take a look at `re-seq`, `re-find` and `re-matches` in combination with a regular expression pattern.
+
+;; I found this web page helpful for understanding regex patterns
+;; [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet)
+
+
+
 ;; Rich comment block with redefined vars ignored
 #_{:clj-kondo/ignore [:redefined-var]}
 (comment
@@ -445,5 +459,63 @@
         :else                                  "Whatever." ))
 
     )
+
+  ) ;; End of rich comment block
+
+
+
+;; Rich comment block with redefined vars ignored
+#_{:clj-kondo/ignore [:redefined-var]}
+(comment
+
+  ;; Brute force approach, a little hacky
+
+  (defn response-for [s] ;; <- arglist goes here
+    (let [clean-s (clojure.string/trim s)]
+      (cond
+        (= clean-s "")                                               "Fine. Be that way!"
+        (and (>= (count (remove #(or (Character/isLowerCase %) (Character/isUpperCase %) (Character/isSpace %)) clean-s)) 2)
+             (clojure.string/ends-with? clean-s "?"))                "Sure."
+        (and (>= (count (filter #(Character/isDigit %) clean-s)) 1)
+             (clojure.string/ends-with? clean-s "?"))                "Sure."
+        (and (>= (count (filter #(Character/isDigit %) clean-s)) 1)
+             (= (count (filter #(Character/isLetter %) clean-s)) 0)) "Whatever."
+        (and (clojure.string/ends-with? clean-s "?")
+             (= (count clean-s) 1))                                  "Sure."
+        (and (clojure.string/ends-with? clean-s "?")
+             (= (clojure.string/upper-case clean-s) clean-s))        "Calm down, I know what I'm doing!"
+        (clojure.string/ends-with? clean-s "?")                      "Sure."
+        (= (clojure.string/upper-case clean-s) clean-s)              "Whoa, chill out!"
+        :else                                                        "Whatever.")))
+
+  ) ;; End of rich comment block
+
+
+;; Rich comment block with redefined vars ignored
+#_{:clj-kondo/ignore [:redefined-var]}
+(comment
+
+  ;; Java Interoperability approach.
+
+  (ns bob
+    (:require [clojure.string :as str]))
+
+  (defn- upper-case-if-letter? [ch]
+    (or (not (Character/isLetter ch)) (Character/isUpperCase ch)))
+
+  (defn yelling? [s]
+    (when (some #(Character/isLetter %) s)
+      (every? upper-case-if-letter? s)))
+
+  (defn question? [s]
+    (str/ends-with? (str/trimr s) "?"))
+
+  (defn response-for [s]
+    (cond
+      (str/blank? s)                   "Fine. Be that way!"
+      (and (yelling? s) (question? s)) "Calm down, I know what I'm doing!"
+      (yelling? s)                     "Whoa, chill out!"
+      (question? s)                    "Sure."
+      :else                            "Whatever."))
 
   ) ;; End of rich comment block
