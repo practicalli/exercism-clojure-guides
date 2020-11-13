@@ -7,11 +7,9 @@ The [practicalli/exercism-clojure-guides repository](https://github.com/practica
 ## Using this guide
 Fork the [practicalli/exercism-clojure-guides repository](https://github.com/practicalli/exercism-clojure-guides) if you wish to add your own changes to the solutions, or clone the project to your computer.
 
-Projects are defined in each top level directory, using a `deps.edn` file.
+Projects are defined in each top level directory, with a simple `deps.edn` file added so projects can also be run with Clojure CLI tools as well as Leiningen.
 
-Clojure CLI tools is required to run each project, or you can add your own project configuration (e.g. Leiningen).  The only dependency used for these projects is Clojure 1.10.x.
-
-Open the project in your favorite Clojure aware editor, or run a REPL.
+Open the project in your favorite Clojure aware editor and start a REPL, or run a terminal REPL.
 
 Evaluate the code and experiment.
 
