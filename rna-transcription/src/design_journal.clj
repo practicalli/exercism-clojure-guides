@@ -4,6 +4,13 @@
 ;; Initial thought are to create a hash-map as a simple dictionary lookup.
 ;; Given a DNA nucleotide, e.g a character from the DNA string, find the key that is the same as the character and return the keys value.
 
+;; A state transaction or dictionary
+
+;; - `G` -> `C`
+;; - `C` -> `G`
+;; - `T` -> `A`
+;; - `A` -> `U`
+
 
 (def dictionary-dna-rna
   "Convert DNA to RNA"
@@ -71,8 +78,8 @@
     (map (fn [nucleotide] (get {\G \C \C \G \T \A \A \U} nucleotide))
          dna)))
 
-
-(to-rna "GCTA")
+(comment
+  (to-rna "GCTA"))
 ;; => "CGAU"
 
 ;; What about when the nucleotide is invalid?
@@ -100,11 +107,11 @@
                              (throw (AssertionError. "Unknown nucleotide"))))
          dna)))
 
-(to-rna "GCTA")
-;; => "CGAU"
+(comment
+  (to-rna "GCTA")
+  ;; => "CGAU"
 
-
-(to-rna "GCXA")
+  (to-rna "GCXA"))
 
 ;; an AssertionError is thrown as the `X` character does not exist in the dictionary hash-map, so the `get` expression returns `nil`.
 
