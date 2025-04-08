@@ -369,6 +369,19 @@
 
 
 
+;; Rich comment block with redefined vars ignored
+#_{:clj-kondo/ignore [:redefined-var]}
+(comment
+
+  (ns armstrong-numbers)
+
+  (defn armstrong? [num]
+    (let [n  (count (str num))
+          bi (biginteger num)]
+      (= bi (reduce + (map #(.pow (biginteger (Character/digit % 10)) n) (str num))))))
+
+
+  ) ;; End of rich comment block
 
 
 
