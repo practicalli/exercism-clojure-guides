@@ -1,10 +1,20 @@
+;; ---------------------------------------------------------
+;; Bank account
+;;
+;; Using software transactional memory (atom)
+;; ---------------------------------------------------------
+
+
 (ns bank-account)
 
+;; ---------------------------------------------------------
 (def bank-accounts
   "All accounts for the bank
   Each account has a unique id and a numeric value"
   (atom {}))
+;; ---------------------------------------------------------
 
+;; ---------------------------------------------------------
 (defn open-account
   "Open an account with a zero balance."
   []
@@ -20,7 +30,9 @@
 
 (defn update-balance [account-id credit]
   (swap! bank-accounts update account-id #(+ % credit)))
+;; ---------------------------------------------------------
 
+;; ---------------------------------------------------------
 (comment
   ;; Experimenting with code in the REPL
   (open-account)
@@ -36,3 +48,4 @@
 
   (update-balance #uuid "af0747fc-86bf-496a-8cc1-efb917887213" -10))
   ;; => {#uuid "af0747fc-86bf-496a-8cc1-efb917887213" 0}
+;; ---------------------------------------------------------
