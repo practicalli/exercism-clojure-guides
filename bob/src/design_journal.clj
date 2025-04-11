@@ -20,7 +20,6 @@
 #_{:clj-kondo/ignore [:redefined-var]}
 (comment
 
-
   ;; Asking Bob a question?
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -495,7 +494,9 @@
 #_{:clj-kondo/ignore [:redefined-var]}
 (comment
 
-  ;; Java Interoperability approach.
+
+  ;; Solution using string related functions
+  ;; with Java Interoperability.
 
   (ns bob
     (:require [clojure.string :as str]))
@@ -519,3 +520,123 @@
       :else                            "Whatever."))
 
   ) ;; End of rich comment block
+
+
+;; Rich comment block with redefined vars ignored
+#_{:clj-kondo/ignore [:redefined-var]}
+(comment
+
+  ;; Exercism community example
+
+  (ns bob
+    (:require [clojure.string :as string]))
+
+  (defn- silence?    [phrase] (string/blank? phrase))
+
+  (defn- question?   [phrase] (= \? (last phrase)))
+
+  (defn- has-letter? [phrase] (some #(Character/isLetter (int %)) phrase))
+
+  (defn- shouting?   [phrase] (and (= msg (string/upper-case phrase))
+                                   (has-letter? phrase)))
+
+  (defn- forceful-question? [phrase]
+    (and (shouting? phrase) (question? phrase)))
+
+  (defn response-for [input]
+    (let [clean (string/trim input)]
+      (cond
+        (forceful-question? clean) "Calm down, I know what I'm doing!"
+        (silence?  clean)          "Fine. Be that way!"
+        (shouting? clean)          "Whoa, chill out!"
+        (question? clean)          "Sure."
+        :else                      "Whatever.")))
+
+
+  ) ;; End of rich comment block
+
+
+
+
+
+;; `clojure.string/blank?` checks for empty strings and whitespace, but does not provide a check for tabs, newlines and similar white space characters.  The regex patter `\s` covers all those white space characters.
+
+;; While each binding in the let expression could be made into a `defn`, this add repetition in the `cond` conditions as each one would be a function call and argument.  Using the let binding, the cond is very simple.
+
+;; In the scope of this project those functions are only used with `response-for`, making function definitions seem redundant.  If this project evolved more rules, then it may be useful to extract commonly used code into additional function definitions.
+
+
+
+(defn response-for [s]
+  (let [ends_with_?               (fn [x] (clojure.string/ends-with? x "?"))
+        all_upper_case?           (fn [x] (= (clojure.string/upper-case x) x))
+        all_upper_case_not_empty? (fn [x] (and (not (clojure.string/blank? x)) (all_upper_case? x)))
+        s_trimmed                 (clojure.string/trim s)
+        s_letters                 (apply str (filter (fn [x] (Character/isLetter x)) s_trimmed))]
+    (cond
+      (empty? s_trimmed)                    "Fine. Be that way!"
+      (ends_with_? s_trimmed)               (if (all_upper_case_not_empty? s_letters) "Calm down, I know what I'm doing!" "Sure.")
+      (all_upper_case_not_empty? s_letters) "Whoa, chill out!"
+      :else                                 "Whatever.")
+    )
+  )
+
+
+
+(defn response-for [s]
+  (let [ends_with_?               #(clojure.string/ends-with? % "?")
+        all_upper_case?           #(= (clojure.string/upper-case %) %)
+        all_upper_case_not_empty? #(and (not (clojure.string/blank? %)) (all_upper_case? %))
+        s_trimmed                 (clojure.string/trim s)
+        s_letters                 (apply str (filter #(Character/isLetter %) s_trimmed))]
+    (cond
+      (empty? s_trimmed)                    "Fine. Be that way!"
+      (ends_with_? s_trimmed)               (if (all_upper_case_not_empty? s_letters) "Calm down, I know what I'm doing!" "Sure.")
+      (all_upper_case_not_empty? s_letters) "Whoa, chill out!"
+      :else                                 "Whatever.")
+    )
+  )
+
+
+(defn response-for [s]
+  (let [ends_with_?               #(clojure.string/ends-with? % "?")
+        all_upper_case?           #(= (clojure.string/upper-case %) %)
+        all_upper_case_not_empty? #(and (not (clojure.string/blank? %)) (all_upper_case? %))
+        s_trimmed                 (clojure.string/trim s)
+        s_letters                 (apply str (filter #(Character/isLetter %) s_trimmed))]
+    (cond
+      (empty? s_trimmed)                    "Fine. Be that way!"
+      (ends_with_? s_trimmed)               (if (all_upper_case_not_empty? s_letters) "Calm down, I know what I'm doing!" "Sure.")
+      (all_upper_case_not_empty? s_letters) "Whoa, chill out!"
+      :else                                 "Whatever.")
+    )
+  )
+
+
+(defn response-for [phrase]
+  (let [phrase-trimmed            (clojure.string/trim phrase)
+        characters                (apply str (filter #(Character/isLetter %) phrase-trimmed))
+        question?                 clojure.string/ends-with? phrase-trimmed "?"
+        all-upper-case?           (= (clojure.string/upper-case characters) characters)
+        all-upper-case-not-empty? (and (not (clojure.string/blank? characters)) all-upper-case? ) ]
+    (cond
+      empty?                                    "Fine. Be that way!"
+      (and question? all-upper-case-not-empty?) "Calm down, I know what I'm doing!"
+      question?                                 "Sure."
+      all-upper-case-not-empty?                 "Whoa, chill out!"
+      :else                                     "Whatever.")))
+
+
+
+
+(defn response-for [s]
+  (let [s_trimmed   (clojure.string/trim s)
+        ends_with_? (clojure.string/ends-with? s_trimmed "?")]
+    (cond
+      empty?                                      "Fine. Be that way!"
+      (and ends_with_? all_upper_case_not_empty?) "Calm down, I know what I'm doing!"
+      all_upper_case_not_empty?
+      all_upper_case_not_empty?                   s_letters "Whoa, chill out!"
+      :else                                       "Whatever.")
+    )
+  )

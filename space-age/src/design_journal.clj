@@ -1,12 +1,6 @@
 (ns design-journal)
 
 
-;; Given an age in seconds, calculate how old someone would be on:
-
-;; Earth: orbital period 365.25 Earth days, or 31557600 seconds
-;; Mercury: orbital period 0.2408467 Earth years
-;; Venus: orbital period 0.61519726 Earth years
-;; Mars: orbital period 1.8808158 Earth years
 ;; Jupiter: orbital period 11.862615 Earth years
 ;; Saturn: orbital period 29.447498 Earth years
 ;; Uranus: orbital period 84.016846 Earth years
@@ -34,7 +28,8 @@
   ;; => 8766.0
 
   ;; minutes in a year
-  (* (:earth orbital-period) 24 60)
+  (type
+    (* (:earth orbital-period) 24 60))
   ;; => 525960.0
 
   ;; seconds in a year
@@ -43,6 +38,7 @@
 
   (type
     (* (:earth orbital-period) 24 60 60))
+;; => java.lang.Double
 
   ;; Define a partial function to calculate the seconds in a year
   (def year-to-seconds (partial * 24 60 60))
@@ -54,7 +50,7 @@
     [orbital-year]
     (* orbital-year 24 60 60))
 
-  (->seconds 365.25)
+  (year->seconds 365.25)
   ;; => 3.15576E7
 
 
@@ -92,6 +88,7 @@
   ;; Math/round docs
   ;; Returns the closest int to the argument, with ties rounding to positive infinity
 
+  (/ 22 7)
 
   ;; Multiplying by a decimal number will eagerly evaluate the number if it is a ratio type
   (* 100.0 22/7)
@@ -128,6 +125,7 @@
      :uranus  84.016846
      :venus   0.61519726})
 
+  ;; (* 365.25 164.79132)
 
   ;; Then use the seconds->years function definition,
   ;; but multiply the relative orbit with the Earth orbit
@@ -181,14 +179,14 @@
   (def relative-orbits
     "Orbital periods for planets in the sol system,
   relative to the orbit of Earth"
-    {:earth   (* 365.25 24 60 60)
-     :jupiter (* 365.25 11.862615 24 60 60)
-     :mars    (* 365.25 1.8808158 24 60 60)
-     :mercury (* 365.25 0.2408467 24 60 60)
-     :neptune (* 365.25 164.79132 24 60 60)
-     :saturn  (* 365.25 29.447498 24 60 60)
-     :uranus  (* 365.25 84.016846 24 60 60)
-     :venus   (* 365.25 0.61519726 24 60 60) })
+    {:earth   3.15576E7
+     :jupiter 3.7435565912399995E8
+     :mars    5.9354032690079994E7
+     :mercury 7600543.81992
+     :neptune 5.200418560032E9
+     :saturn  9.292923628848001E8
+     :uranus  2.6513700193296E9
+     :venus   1.9414149052176E7 })
 
   ;; This simplifies the functions for each planet
 
@@ -252,6 +250,8 @@
      :uranus  84.016846
      :venus   0.61519726})
 
+
+
   (defn seconds->years
     [relative-orbits planet duration]
     (/ duration
@@ -281,6 +281,10 @@
          (* (:earth relative-orbits) (planet relative-orbits))
          seconds->day)))
 
+  (defn age-on-planet
+    [relative-orbits planet duration]
+    (/ duration planet relative-orbits))
+
 
   ;; Update the tests for the pure function
   ;; Use the existing `round-to` function
@@ -300,5 +304,81 @@
 
   ;; Refactor all the other tests,
   ;; adding them as testing sections within the age-on-planet-test
+
+  ) ;; End of rich comment block
+
+
+;; Rich comment block with redefined vars ignored
+#_{:clj-kondo/ignore [:redefined-var]}
+(comment
+
+  ;; https://exercism.io/tracks/clojure/exercises/space-age/solutions/c086e2903b3c46f9b4647b9775637e7f
+
+  (defn seconds-to-earth-years [seconds]
+    (/ seconds 31557600.0))
+
+  (defn- age-fn [year-ratio]
+    (fn [seconds]
+      (let [earth-years (seconds-to-earth-years seconds)]
+        (/ earth-years year-ratio))))
+
+  (def on-mercury (age-fn 0.240846))
+  (def on-venus   (age-fn 0.6151972))
+  (def on-earth   (age-fn 1))
+  (def on-mars    (age-fn 1.8808158))
+  (def on-jupiter (age-fn 11.862615))
+  (def on-saturn  (age-fn 29.447498))
+  (def on-neptune (age-fn 164.79132))
+  (def on-uranus  (age-fn 84.016846))
+
+  ) ;; End of rich comment block
+
+
+;; Rich comment block with redefined vars ignored
+#_{:clj-kondo/ignore [:redefined-var]}
+(comment
+
+  ;; Original submission
+  ;; orbital-period should be passed as an argument,
+  ;; but that would break the exercism tests
+
+  (def orbital-period
+    "Orbital periods for planets in the sol system"
+    {:earth   365.25
+     :jupiter 11.862615
+     :mars    1.8808158
+     :mercury 0.2408467
+     :neptune 164.79132
+     :saturn  29.447498
+     :uranus  84.016846
+     :venus   0.61519726})
+
+
+  ;; Functions are a little verbose and not pure (constrained by Exercism tests)
+
+  (defn on-mercury [seconds]
+    (/ seconds (* (:earth orbital-period) (:mercury orbital-period)) 24 60 60))
+
+  (defn on-venus [seconds]
+    (/ seconds (* (:earth orbital-period) (:venus orbital-period)) 24 60 60))
+
+  (defn on-earth [seconds]
+    (/ seconds (:earth orbital-period) 24 60 60))
+
+  (defn on-mars [seconds]
+    (/ seconds (* (:earth orbital-period) (:mars orbital-period)) 24 60 60))
+
+  (defn on-jupiter [seconds]
+    (/ seconds (* (:earth orbital-period) (:jupiter orbital-period)) 24 60 60))
+
+  (defn on-saturn [seconds]
+    (/ seconds (* (:earth orbital-period) (:saturn orbital-period)) 24 60 60))
+
+  (defn on-neptune [seconds]
+    (/ seconds (* (:earth orbital-period) (:neptune orbital-period)) 24 60 60))
+
+  (defn on-uranus [seconds]
+    (/ seconds (* (:earth orbital-period) (:uranus orbital-period)) 24 60 60))
+
 
   ) ;; End of rich comment block

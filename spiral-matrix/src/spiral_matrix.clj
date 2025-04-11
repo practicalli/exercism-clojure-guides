@@ -112,3 +112,67 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;; Rich comment block with redefined vars ignored
+#_{:clj-kondo/ignore [:redefined-var]}
+(comment
+
+  ;; Very manual approach
+
+  (ns spiral-matrix
+    (:require [clojure.pprint :refer [pprint]]))
+
+
+  ;; strategy:
+  ;; Example: spriral 5
+  ;; 5-to-right, 1 2 3 4 5
+  ;; 4-down 6 7 8 9,
+  ;; 4-left 10 11 12 13,
+  ;; 3-up 14 15 16,
+  ;; 3-right 17 18 19
+  ;; 2-d 20 21,
+  ;; 2-l 22 23
+  ;; 1-u 24,
+  ;; 1r 25
+  ;; general: right(n) down(n-1) left(n-1) up(n-2) start again --> right(n-2)
+  ;; Eg. 3 --> 3r (123) 2d (45) 2l (67) 1u (8) 1r (9)
+  (defn spiral [n]
+    (let [segments (as-> (range (dec n) 0 -1) col
+                     (map #(vector % %) col)
+                     (flatten (conj col n)))
+
+          directions (->> (repeat '(1 0 0 1 -1 0 0 -1))
+                          (take (Math/ceil (/ (count segments) 4)))
+                          flatten
+                          (partition 2))
+
+          val-partitions (drop 1
+                               (reduce
+                                 #(conj %1
+                                        (range
+                                          (inc (last (last %1)))
+                                          (inc (+ (last (last %1)) %2))))
+                                 [[0]] segments))
+
+          steps (partition 3 (flatten
+                               (map (fn [d s]
+                                      (flatten
+                                        (map (fn [v] [d v]) s)))
+                                    directions val-partitions)))
+
+          x (atom -1)
+
+          y (atom 0)
+
+          matrix (atom (vec (repeat n (vec (repeat n 0)))))
+
+          matrix (reduce #(do
+                            (swap! x + (first %2))
+                            (swap! y + (second %2))
+                            (reset! %1 (assoc-in @%1 [@y @x] (last %2)))
+                            %1)
+                         matrix steps)]
+      @matrix))
+
+  ) ;; End of rich comment block

@@ -48,6 +48,7 @@
   ;; Or to keep it lazy we could try rest
 
   (take 9 (rest (range)))
+;; => (1 2 3 4 5 6 7 8 9)
 
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -303,9 +304,13 @@
   (spiral 3)
 
 
+
   ) ;; End of rich comment block
 
 
+#_(map first)
+
+;; (map inc [1 2 #_#_#_3 #_4 5])
 
 ;; Rich comment block with redefined vars ignored
 #_{:clj-kondo/ignore [:redefined-var]}

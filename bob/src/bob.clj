@@ -1,5 +1,5 @@
 (ns bob
-  (:require clojure.string))
+  (:require [clojure.string :as string]))
 
 ;; This could be the very basics of a text based adventure game or a very unintelligent chatbot
 
@@ -31,3 +31,48 @@
       question               "Sure."
       yelling                "Whoa, chill out!"
       :whatever              "Whatever.")))
+
+
+
+;; Using string functions
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn response-for [phrase]
+  (let [phrase    (string/trim phrase)
+        silence?  (string/blank? phrase)
+        question? (= \? (last phrase))
+        letters?  (some #(Character/isLetter (int %)) phrase)
+        shouting? (and (= phrase (string/upper-case phrase))
+                       letters?)]
+    (cond
+      (and shouting? question?) "Calm down, I know what I'm doing!"
+      silence?                  "Fine. Be that way!"
+      shouting?                 "Whoa, chill out!"
+      question?                 "Sure."
+      :else                     "Whatever.")))
+
+
+
+
+
+;; (defn- silence?    [phrase] (string/blank? phrase))
+
+;; (defn- question?   [phrase] (= \? (last phrase)))
+
+;; (defn- has-letter? [phrase] (some #(Character/isLetter (int %)) phrase))
+
+;; (defn- shouting?   [phrase] (and (= phrase (string/upper-case phrase))
+;;                                  (has-letter? phrase)))
+
+;; (defn- forceful-question? [phrase]
+;;   (and (shouting? phrase) (question? phrase)))
+
+;; (defn response-for [input]
+;;   (let [clean (string/trim input)]
+;;     (cond
+;;       (forceful-question? clean) "Calm down, I know what I'm doing!"
+;;       (silence?  clean)          "Fine. Be that way!"
+;;       (shouting? clean)          "Whoa, chill out!"
+;;       (question? clean)          "Sure."
+;;       :else                      "Whatever.")))
