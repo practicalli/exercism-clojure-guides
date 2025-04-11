@@ -1,15 +1,12 @@
 (ns two-fer)
 
-
-
 (defn two-fer
   ([] (two-fer "you"))
   ([name]
-   (str "One for " name", one for me.")))
+   (str "One for " name ", one for me.")))
 
 (two-fer)
 ;; (two-fer "Zaphod")
-
 
 ;; (defn two-fer-var-arg
 ;;   "Using variable arguments"
@@ -21,7 +18,6 @@
 ;; (two-fer-var-arg)
 ;; (two-fer-var-arg "Ford")
 
-
 ;; (defn two-fer-var-arg-apply
 ;;   "Using variable arguments and apply"
 ;;   [& name]
@@ -32,7 +28,6 @@
 ;; (two-fer-var-arg-apply)
 ;; (two-fer-var-arg-apply "Ford")
 
-
 ;; (defn two-fer-var-arg-apply-when-let
 ;;   "Using variable arguments and apply"
 ;;   [& name]
@@ -41,7 +36,6 @@
 
 ;; (two-fer-var-arg-apply-when-let)
 ;; (two-fer-var-arg-apply-when-let "Arthur")
-
 
 ;; Reasonable solutions
 
@@ -61,12 +55,9 @@
 
 ;; Calling (two-fer "you") vs. returning the string directly.
 
-
-
 (reduce #(str %2 %1) "" "hello")
 
 (reduce conj '() "hello")
-
 
 ;; A more idiomatic and preferable approach for production code would be to use the clojure.string/join function.
 
